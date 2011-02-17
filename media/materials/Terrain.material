@@ -1,0 +1,1810 @@
+vertex_program pointvp hlsl
+{
+    source Spot.hlsl
+    entry_point main_vp
+    target vs_2_0
+
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+		param_named_auto lightPosition light_position_object_space 0
+    }
+}
+
+
+fragment_program pointfp hlsl
+{
+    source Spot.hlsl
+    entry_point main_fp
+    target ps_2_0
+
+    default_params
+    {
+		param_named_auto lightDiffuse light_diffuse_colour 0 
+		param_named_auto lightAttenuation light_attenuation 0
+		param_named_auto camPos camera_position_object_space
+		param_named_auto lightPos light_position_object_space 0
+    }
+}
+
+vertex_program spotvp hlsl
+{
+    source Spot.hlsl
+    entry_point spot_vp
+    target vs_2_0
+
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+		param_named_auto lightPosition light_position_object_space 0
+    }
+}
+
+
+fragment_program spotfp hlsl
+{
+    source Spot.hlsl
+    entry_point spot_fp
+    target ps_2_0
+
+    default_params
+    {
+		param_named_auto lightDiffuse light_diffuse_colour 0 
+		param_named_auto lightAttenuation light_attenuation 0
+		param_named_auto camPos camera_position_object_space
+		param_named_auto lightPos light_position_object_space 0
+		param_named_auto spotParams spotlight_params 0
+		param_named_auto spotDir light_direction_object_space 0
+    }
+}
+
+
+vertex_program ambvp hlsl
+{
+    source Spot.hlsl
+    entry_point amb_vp
+    target vs_2_0
+
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+    }
+}
+
+
+fragment_program ambfp hlsl
+{
+    source Spot.hlsl
+    entry_point amb_fp
+    target ps_2_0
+
+    default_params
+    {
+		param_named_auto camPos camera_position_object_space
+    }
+}
+
+// 2 texcoord vers
+
+vertex_program pointvp2 hlsl
+{
+    source Spot.hlsl
+    entry_point main_vp2
+    target vs_2_0
+
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+		param_named_auto lightPosition light_position_object_space 0
+    }
+}
+
+
+fragment_program pointfp2 hlsl
+{
+    source Spot.hlsl
+    entry_point main_fp2
+    target ps_2_0
+
+    default_params
+    {
+		param_named_auto lightDiffuse light_diffuse_colour 0 
+		param_named_auto lightAttenuation light_attenuation 0
+		param_named_auto camPos camera_position_object_space
+		param_named_auto lightPos light_position_object_space 0
+    }
+}
+
+vertex_program spotvp2 hlsl
+{
+    source Spot.hlsl
+    entry_point spot_vp2
+    target vs_2_0
+
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+		param_named_auto lightPosition light_position_object_space 0
+    }
+}
+
+
+fragment_program spotfp2 hlsl
+{
+    source Spot.hlsl
+    entry_point spot_fp2
+    target ps_2_0
+
+    default_params
+    {
+		param_named_auto lightDiffuse light_diffuse_colour 0 
+		param_named_auto lightAttenuation light_attenuation 0
+		param_named_auto camPos camera_position_object_space
+		param_named_auto lightPos light_position_object_space 0
+		param_named_auto spotParams spotlight_params 0
+		param_named_auto spotDir light_direction_object_space 0
+    }
+}
+
+
+vertex_program ambvp2 hlsl
+{
+    source Spot.hlsl
+    entry_point amb_vp2
+    target vs_2_0
+
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+    }
+}
+
+
+fragment_program ambfp2 hlsl
+{
+    source Spot.hlsl
+    entry_point amb_fp2
+    target ps_2_0
+
+    default_params
+    {
+		param_named_auto camPos camera_position_object_space
+    }
+}
+
+material BasicTerrain
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp
+			{
+			
+			}
+			fragment_program_ref ambfp
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture seafloor01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				colour_op add
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp
+			{
+			
+			}
+			fragment_program_ref pointfp
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture seafloor01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp
+			{
+			
+			}
+			fragment_program_ref spotfp
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture seafloor01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		// spot...
+	}
+	// fixed function fallback:
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.100000 0.100000 0.100000 1.000000
+			
+			texture_unit
+			{
+				texture seafloor01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+material Base
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			lighting on
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.400000 0.400000 0.400000 1.000000
+			
+			texture_unit
+			{
+				texture base.png
+				tex_address_mode border
+			}
+			
+		}
+	}
+}
+
+
+material Arms
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			lighting on
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.0500000 0.0500000 0.0500000 1.000000
+			
+			texture_unit
+			{
+				texture Arms.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				//oscale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+		}
+	}
+}
+
+material Beacon
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			lighting on
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.9000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.050000 0.100000 0.0500000 1.000000
+			
+			texture_unit
+			{
+				texture Arms.png
+				tex_address_mode border
+			}
+		}
+	}
+}
+
+
+material Chest01
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture chest01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture chest01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture chest01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture Chest01.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+material Light
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			scene_blend add
+			depth_write off
+			//depth_check off
+			depth_bias 5
+			
+			
+
+			texture_unit
+			{
+				texture light.png
+				tex_address_mode border
+			}	
+			
+			fog_override true linear 0 0 0 0.0 50 300
+			
+		}
+	}
+}
+
+material LightB
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			scene_blend add
+			depth_write off
+			//depth_check off
+			depth_bias 5
+			
+			
+
+			texture_unit
+			{
+				texture lightB.png
+				tex_address_mode border
+			}	
+			
+			fog_override true linear 0 0 0 0.0 50 300
+			
+		}
+	}
+}
+
+material Light2
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			scene_blend add
+			depth_write off
+			//depth_check off
+			//depth_bias 255
+			
+			texture_unit
+			{
+				texture light2.png
+				tex_address_mode border
+				colour_op_ex modulate_4x
+			}	
+			
+			fog_override true linear 0 0 0 0.0 5 160
+			
+		}
+	}
+}
+
+
+
+material Wreck01
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Wreck01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Wreck01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Wreck01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture Wreck01.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+material Wreck02
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Wreck02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Wreck02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Wreck02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture Wreck02.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+
+material Bomb
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Bomb.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Bomb.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Bomb.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture Bomb.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+
+material goldbars
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture goldbars.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture goldbars.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture goldbars.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture goldbars.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+material chembarrel
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture chembarrel.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture chembarrel.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture chembarrel.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture chembarrel.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+material crate01
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture crate01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture crate01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture crate01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture crate01.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+material crate02
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture crate02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture crate02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture crate02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture crate02.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+
+
+material wine01
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture wine01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture wine01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture wine01.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture wine01.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
+
+
+
+material Chest02
+{
+	receive_shadows on
+	technique 0
+	{
+		pass
+		{
+			fog_override true
+			lighting on
+			vertex_program_ref ambvp2
+			{
+			
+			}
+			fragment_program_ref ambfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Chest02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light point 
+			
+			lighting on
+			vertex_program_ref pointvp2
+			{
+			
+			}
+			fragment_program_ref pointfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Chest02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+		
+		pass
+		{
+			fog_override true
+			scene_blend add
+			iteration once_per_light spot
+			
+			lighting on
+			vertex_program_ref spotvp2
+			{
+			
+			}
+			fragment_program_ref spotfp2
+			{
+			
+			}
+			
+			texture_unit
+			{
+				texture Chest02.png
+				tex_address_mode wrap
+				scale 0.2 0.2
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+			}
+			
+		}
+	}
+	technique 1
+	{
+		pass
+		{
+			lighting on
+			
+			
+			
+			//depth_check off
+			
+			ambient 0.1000500000 0.1000500000 0.1000500000 1.000000
+			diffuse 0.7000 0.7000 0.7000 1.000000
+			specular 0.00000 0.00000 0.00000 1.000000 12.500000
+			emissive 0.00000 0.00000 0.00000 1.000000
+			
+			texture_unit
+			{
+				texture Chest02.png
+				tex_address_mode border
+			}
+			
+			texture_unit
+			{
+				anim_texture caustic3.bmp 16 1
+				tex_address_mode wrap
+				scale 0.25 0.25
+				tex_coord_set 1
+				colour_op add
+			}
+			
+		}
+	}
+}
